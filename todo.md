@@ -69,3 +69,7 @@
 - [x] Update category definitions to only include fetchable categories
 - [x] Test data fetching for all supported categories
 - [x] Update UI to reflect available categories only
+
+## Category UI Fix (v1.6)
+- [x] Fix FilterBar category dropdown to only show supported categories (all, games)
+- [x] Remove hardcoded individual category options from UI
