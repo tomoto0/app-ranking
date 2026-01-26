@@ -57,3 +57,8 @@
 - [x] Add meta description (50-160 characters)
 - [x] Add meta keywords
 - [x] Add Open Graph (OG) tags for social media sharing
+
+## OGP Image (v1.4)
+- [x] Generate OGP image (1200x630px) for social media sharing
+- [x] Place OGP image in client/public directory
+- [x] Add og:image meta tag to index.html
