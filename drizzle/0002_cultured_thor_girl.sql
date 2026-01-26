@@ -1,0 +1,1 @@
+ALTER TABLE `rankings` MODIFY COLUMN `categoryType` enum('all','games','entertainment','social','business','education','utilities','productivity','photo','lifestyle','finance','health','music','shopping','travel','news','sports','food') NOT NULL DEFAULT 'all';

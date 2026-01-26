@@ -127,6 +127,39 @@ describe("apps router", () => {
   });
 });
 
+describe("apps.search", () => {
+  it("should return empty results for non-matching query", async () => {
+    const ctx = createTestContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.apps.search({
+      query: "nonexistentapp12345",
+      countries: ["JP"],
+      rankingType: "topgrossing",
+      categoryType: "all",
+      date: "2024-01-01",
+    });
+
+    expect(result).toHaveProperty("results");
+    expect(Array.isArray(result.results)).toBe(true);
+  });
+
+  it("should accept multiple countries in search", async () => {
+    const ctx = createTestContext();
+    const caller = appRouter.createCaller(ctx);
+
+    const result = await caller.apps.search({
+      query: "test",
+      countries: ["JP", "US", "GB"],
+      rankingType: "topfree",
+      categoryType: "entertainment",
+      date: "2024-01-01",
+    });
+
+    expect(result).toHaveProperty("results");
+  });
+});
+
 describe("constants router", () => {
   it("should return countries", async () => {
     const ctx = createTestContext();
@@ -155,14 +188,33 @@ describe("constants router", () => {
     expect(result).toHaveProperty("toppaid");
   });
 
-  it("should return category types", async () => {
+  it("should return category types with expanded categories", async () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 
     const result = await caller.constants.categoryTypes();
 
+    // Check general categories
     expect(result).toHaveProperty("all");
     expect(result).toHaveProperty("games");
+    
+    // Check expanded individual categories
+    expect(result).toHaveProperty("entertainment");
+    expect(result).toHaveProperty("social");
+    expect(result).toHaveProperty("business");
+    expect(result).toHaveProperty("education");
+    expect(result).toHaveProperty("utilities");
+    expect(result).toHaveProperty("productivity");
+    expect(result).toHaveProperty("photo");
+    expect(result).toHaveProperty("lifestyle");
+    expect(result).toHaveProperty("finance");
+    expect(result).toHaveProperty("health");
+    expect(result).toHaveProperty("music");
+    expect(result).toHaveProperty("shopping");
+    expect(result).toHaveProperty("travel");
+    expect(result).toHaveProperty("news");
+    expect(result).toHaveProperty("sports");
+    expect(result).toHaveProperty("food");
   });
 
   it("should return app categories", async () => {

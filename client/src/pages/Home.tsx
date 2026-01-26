@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import { toast } from "sonner";
 import { RefreshCw, Loader2, Globe, TrendingUp, BarChart3 } from "lucide-react";
 import { FilterBar, CountryCode, RankingType, CategoryType, COUNTRIES, RANKING_TYPES } from "@/components/FilterBar";
+import { SearchBar } from "@/components/SearchBar";
 import { RankingTable, AppData, RankingItem } from "@/components/RankingTable";
 import { Pagination } from "@/components/Pagination";
 import { AppDetailModal } from "@/components/AppDetailModal";
@@ -126,6 +127,13 @@ export default function Home() {
               </div>
             </div>
             <div className="flex items-center gap-2">
+              <SearchBar
+                selectedCountries={selectedCountries}
+                selectedRankingType={selectedRankingType}
+                selectedCategoryType={selectedCategoryType}
+                selectedDate={selectedDate}
+                onAppClick={handleAppClick}
+              />
               <Button
                 variant="outline"
                 size="sm"

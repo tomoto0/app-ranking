@@ -1,6 +1,13 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { CalendarIcon, ChevronLeft, ChevronRight } from "lucide-react";
@@ -26,10 +33,26 @@ const RANKING_TYPES = {
 
 type RankingType = keyof typeof RANKING_TYPES;
 
-// Category types
+// Category types - expanded with individual categories
 const CATEGORY_TYPES = {
-  all: { id: "all", name: "All Categories", nameJa: "総合" },
-  games: { id: "games", name: "Games", nameJa: "ゲーム総合" },
+  all: { id: "all", name: "All Categories", nameJa: "総合", group: "general" },
+  games: { id: "games", name: "Games", nameJa: "ゲーム総合", group: "general" },
+  entertainment: { id: "entertainment", name: "Entertainment", nameJa: "エンタメ", group: "category" },
+  social: { id: "social", name: "Social Networking", nameJa: "SNS", group: "category" },
+  business: { id: "business", name: "Business", nameJa: "ビジネス", group: "category" },
+  education: { id: "education", name: "Education", nameJa: "教育", group: "category" },
+  utilities: { id: "utilities", name: "Utilities", nameJa: "ユーティリティ", group: "category" },
+  productivity: { id: "productivity", name: "Productivity", nameJa: "仕事効率化", group: "category" },
+  photo: { id: "photo", name: "Photo & Video", nameJa: "写真/ビデオ", group: "category" },
+  lifestyle: { id: "lifestyle", name: "Lifestyle", nameJa: "ライフスタイル", group: "category" },
+  finance: { id: "finance", name: "Finance", nameJa: "ファイナンス", group: "category" },
+  health: { id: "health", name: "Health & Fitness", nameJa: "ヘルスケア", group: "category" },
+  music: { id: "music", name: "Music", nameJa: "ミュージック", group: "category" },
+  shopping: { id: "shopping", name: "Shopping", nameJa: "ショッピング", group: "category" },
+  travel: { id: "travel", name: "Travel", nameJa: "旅行", group: "category" },
+  news: { id: "news", name: "News", nameJa: "ニュース", group: "category" },
+  sports: { id: "sports", name: "Sports", nameJa: "スポーツ", group: "category" },
+  food: { id: "food", name: "Food & Drink", nameJa: "フード/ドリンク", group: "category" },
 } as const;
 
 type CategoryType = keyof typeof CATEGORY_TYPES;
@@ -86,6 +109,14 @@ export function FilterBar({
     const dayOfWeek = days[date.getDay()];
     return `${year}/${month}/${day}(${dayOfWeek})`;
   };
+
+  // Group categories for display
+  const generalCategories = Object.entries(CATEGORY_TYPES).filter(
+    ([_, cat]) => cat.group === "general"
+  );
+  const specificCategories = Object.entries(CATEGORY_TYPES).filter(
+    ([_, cat]) => cat.group === "category"
+  );
 
   return (
     <div className="space-y-4">
@@ -164,22 +195,43 @@ export function FilterBar({
           ))}
         </div>
 
-        {/* Category Selection */}
-        <div className="flex items-center gap-1">
-          <span className="text-sm text-muted-foreground mr-2">カテゴリ:</span>
-          {Object.entries(CATEGORY_TYPES).map(([key, type]) => (
-            <Button
-              key={key}
-              variant={selectedCategoryType === key ? "default" : "outline"}
-              size="sm"
-              className={cn(
-                selectedCategoryType === key && "bg-primary text-primary-foreground"
-              )}
-              onClick={() => onCategoryTypeChange(key as CategoryType)}
-            >
-              {type.nameJa}
-            </Button>
-          ))}
+        {/* Category Selection - Dropdown */}
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-muted-foreground">カテゴリ:</span>
+          <Select
+            value={selectedCategoryType}
+            onValueChange={(value) => onCategoryTypeChange(value as CategoryType)}
+          >
+            <SelectTrigger className="w-[160px]">
+              <SelectValue>
+                {CATEGORY_TYPES[selectedCategoryType].nameJa}
+              </SelectValue>
+            </SelectTrigger>
+            <SelectContent>
+              {/* General categories */}
+              <div className="px-2 py-1 text-xs text-muted-foreground font-semibold">
+                全般
+              </div>
+              {generalCategories.map(([key, cat]) => (
+                <SelectItem key={key} value={key}>
+                  {cat.nameJa}
+                </SelectItem>
+              ))}
+              
+              {/* Separator */}
+              <div className="my-1 border-t border-border" />
+              
+              {/* Specific categories */}
+              <div className="px-2 py-1 text-xs text-muted-foreground font-semibold">
+                個別カテゴリ
+              </div>
+              {specificCategories.map(([key, cat]) => (
+                <SelectItem key={key} value={key}>
+                  {cat.nameJa}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
       </div>
     </div>

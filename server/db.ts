@@ -292,6 +292,94 @@ export async function getLatestRankingDate(country: CountryCode): Promise<string
   }
 }
 
+// Search apps by name
+export async function searchApps(params: {
+  query: string;
+  countries: CountryCode[];
+  limit: number;
+}): Promise<App[]> {
+  const db = await getDb();
+  if (!db) return [];
+
+  const { query, countries, limit } = params;
+
+  try {
+    const results = await db
+      .select()
+      .from(apps)
+      .where(
+        and(
+          sql`${apps.name} LIKE ${`%${query}%`}`,
+          inArray(apps.country, countries)
+        )
+      )
+      .limit(limit);
+
+    return results;
+  } catch (error) {
+    console.error("[Database] Failed to search apps:", error);
+    return [];
+  }
+}
+
+// Get app rankings across multiple countries
+export async function getAppRankingsAcrossCountries(params: {
+  appStoreId: string;
+  countries: CountryCode[];
+  rankingType: RankingType;
+  categoryType: CategoryType;
+  date: string;
+}): Promise<{ app: App | null; rankings: Record<string, number> }> {
+  const db = await getDb();
+  if (!db) return { app: null, rankings: {} };
+
+  const { appStoreId, countries, rankingType, categoryType, date } = params;
+
+  try {
+    // Get app info from any country
+    const appResult = await db
+      .select()
+      .from(apps)
+      .where(eq(apps.appStoreId, appStoreId))
+      .limit(1);
+
+    if (appResult.length === 0) {
+      return { app: null, rankings: {} };
+    }
+
+    // Get rankings for all countries
+    const rankingResults = await db
+      .select({
+        country: rankings.country,
+        rank: rankings.rank,
+      })
+      .from(rankings)
+      .innerJoin(apps, eq(rankings.appId, apps.id))
+      .where(
+        and(
+          eq(apps.appStoreId, appStoreId),
+          inArray(rankings.country, countries),
+          eq(rankings.rankingType, rankingType),
+          eq(rankings.categoryType, categoryType),
+          eq(rankings.rankDate, new Date(date))
+        )
+      );
+
+    const rankingsMap: Record<string, number> = {};
+    for (const r of rankingResults) {
+      rankingsMap[r.country] = r.rank;
+    }
+
+    return {
+      app: appResult[0],
+      rankings: rankingsMap,
+    };
+  } catch (error) {
+    console.error("[Database] Failed to get app rankings across countries:", error);
+    return { app: null, rankings: {} };
+  }
+}
+
 // Batch operations for efficiency
 export async function batchUpsertAppsAndRankings(
   appsData: InsertApp[],

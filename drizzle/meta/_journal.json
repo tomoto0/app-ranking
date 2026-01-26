@@ -15,6 +15,13 @@
       "when": 1769460469874,
       "tag": "0001_narrow_sabretooth",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1769463525505,
+      "tag": "0002_cultured_thor_girl",
+      "breakpoints": true
     }
   ]
 }

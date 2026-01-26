@@ -43,3 +43,12 @@
 - [x] Change AI trend analysis prompt to output in Japanese
 - [x] Remove ranking history chart from app detail modal
 - [x] Remove ranking stats (highest/average/lowest rank) from app detail modal
+
+## New Features (v1.2)
+- [x] Add app search functionality (search by app name)
+- [x] Add search API endpoint
+- [x] Expand category filter (add Tools, Entertainment, SNS, Business, Education, etc.)
+- [x] Update category constants with individual categories
+- [x] Create category dropdown selector UI
+- [x] Create search bar UI component
+- [x] Display cross-country ranking for searched apps

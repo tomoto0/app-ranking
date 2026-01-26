@@ -10,13 +10,16 @@ import {
   getLatestRankingDate,
   upsertApp,
   upsertRanking,
-  getDb
+  getDb,
+  searchApps,
+  getAppRankingsAcrossCountries
 } from "./db";
 import { fetchAppleRssFeed, fetchMultipleAppDetails } from "./appleRss";
 import { invokeLLM } from "./_core/llm";
 import { 
   COUNTRY_CODES, 
-  RANKING_TYPE_IDS, 
+  RANKING_TYPE_IDS,
+  CATEGORY_TYPE_IDS,
   COUNTRIES, 
   RANKING_TYPES,
   CATEGORY_TYPES,
@@ -32,7 +35,7 @@ import { eq, and, inArray, sql } from "drizzle-orm";
 const rankingQuerySchema = z.object({
   countries: z.array(z.enum(COUNTRY_CODES as [string, ...string[]])).min(1),
   rankingType: z.enum(RANKING_TYPE_IDS as [string, ...string[]]),
-  categoryType: z.enum(["all", "games"] as const),
+  categoryType: z.enum(CATEGORY_TYPE_IDS as [string, ...string[]]),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
   page: z.number().min(1).default(1),
   pageSize: z.number().min(1).max(100).default(20),
@@ -42,20 +45,20 @@ const appHistorySchema = z.object({
   appId: z.number(),
   country: z.enum(COUNTRY_CODES as [string, ...string[]]),
   rankingType: z.enum(RANKING_TYPE_IDS as [string, ...string[]]),
-  categoryType: z.enum(["all", "games"] as const),
+  categoryType: z.enum(CATEGORY_TYPE_IDS as [string, ...string[]]),
   period: z.enum(["week", "month", "year"]),
 });
 
 const fetchRankingsSchema = z.object({
   country: z.enum(COUNTRY_CODES as [string, ...string[]]),
   rankingType: z.enum(RANKING_TYPE_IDS as [string, ...string[]]),
-  categoryType: z.enum(["all", "games"] as const),
+  categoryType: z.enum(CATEGORY_TYPE_IDS as [string, ...string[]]),
 });
 
 const trendAnalysisSchema = z.object({
   countries: z.array(z.enum(COUNTRY_CODES as [string, ...string[]])).min(1),
   rankingType: z.enum(RANKING_TYPE_IDS as [string, ...string[]]),
-  categoryType: z.enum(["all", "games"] as const),
+  categoryType: z.enum(CATEGORY_TYPE_IDS as [string, ...string[]]),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
@@ -63,7 +66,15 @@ const comparisonAnalysisSchema = z.object({
   appId: z.number(),
   countries: z.array(z.enum(COUNTRY_CODES as [string, ...string[]])).min(2),
   rankingType: z.enum(RANKING_TYPE_IDS as [string, ...string[]]),
-  categoryType: z.enum(["all", "games"] as const),
+  categoryType: z.enum(CATEGORY_TYPE_IDS as [string, ...string[]]),
+  date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+});
+
+const searchAppsSchema = z.object({
+  query: z.string().min(1).max(100),
+  countries: z.array(z.enum(COUNTRY_CODES as [string, ...string[]])).min(1),
+  rankingType: z.enum(RANKING_TYPE_IDS as [string, ...string[]]),
+  categoryType: z.enum(CATEGORY_TYPE_IDS as [string, ...string[]]),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
 });
 
@@ -332,6 +343,43 @@ export const appRouter = router({
               ? Math.round(history.reduce((sum, r) => sum + r.rank, 0) / history.length * 10) / 10 
               : null,
           },
+        };
+      }),
+    // Search apps by name
+    search: publicProcedure
+      .input(searchAppsSchema)
+      .query(async ({ input }) => {
+        const { query, countries, rankingType, categoryType, date } = input;
+
+        // Search apps in database
+        const foundApps = await searchApps({
+          query,
+          countries: countries as CountryCode[],
+          limit: 50,
+        });
+
+        if (foundApps.length === 0) {
+          return { results: [] };
+        }
+
+        // Get unique appStoreIds and fetch their rankings across countries
+        const uniqueAppStoreIds = Array.from(new Set(foundApps.map(a => a.appStoreId)));
+        
+        const results = await Promise.all(
+          uniqueAppStoreIds.slice(0, 20).map(async (appStoreId) => {
+            const data = await getAppRankingsAcrossCountries({
+              appStoreId,
+              countries: countries as CountryCode[],
+              rankingType: rankingType as RankingType,
+              categoryType: categoryType as CategoryType,
+              date,
+            });
+            return data;
+          })
+        );
+
+        return {
+          results: results.filter(r => r.app !== null),
         };
       }),
   }),

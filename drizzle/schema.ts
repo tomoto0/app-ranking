@@ -70,7 +70,11 @@ export const rankings = mysqlTable("rankings", {
   appId: int("appId").notNull(),
   country: varchar("country", { length: 8 }).notNull(),
   rankingType: mysqlEnum("rankingType", ["topgrossing", "topfree", "toppaid"]).notNull(),
-  categoryType: mysqlEnum("categoryType", ["all", "games"]).default("all").notNull(),
+  categoryType: mysqlEnum("categoryType", [
+    "all", "games", "entertainment", "social", "business", "education",
+    "utilities", "productivity", "photo", "lifestyle", "finance", "health",
+    "music", "shopping", "travel", "news", "sports", "food"
+  ]).default("all").notNull(),
   rank: int("rank").notNull(),
   rankDate: date("rankDate").notNull(),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
