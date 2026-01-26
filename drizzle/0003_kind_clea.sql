@@ -1,0 +1,1 @@
+ALTER TABLE `rankings` MODIFY COLUMN `categoryType` enum('all','games') NOT NULL DEFAULT 'all';

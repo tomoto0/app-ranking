@@ -62,3 +62,10 @@
 - [x] Generate OGP image (1200x630px) for social media sharing
 - [x] Place OGP image in client/public directory
 - [x] Add og:image meta tag to index.html
+
+## Category Fix (v1.5)
+- [x] Investigate Apple RSS API available categories
+- [x] Remove unsupported categories from category list
+- [x] Update category definitions to only include fetchable categories
+- [x] Test data fetching for all supported categories
+- [x] Update UI to reflect available categories only

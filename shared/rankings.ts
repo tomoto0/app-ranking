@@ -20,34 +20,18 @@ export const RANKING_TYPES = {
 export type RankingType = keyof typeof RANKING_TYPES;
 export const RANKING_TYPE_IDS = Object.keys(RANKING_TYPES) as RankingType[];
 
-// Category types for filtering
-// "all" and "games" are special types that use different RSS feed URLs
-// Individual category IDs filter within the "all" feed
+// Category types - Only categories supported by Apple RSS Feed API
+// Apple RSS API only supports: /apps.json (all) and /games.json (games)
+// Individual categories are NOT supported by the RSS API
 export const CATEGORY_TYPES = {
-  all: { id: "all", name: "All Categories", nameJa: "総合", genreId: null },
-  games: { id: "games", name: "Games", nameJa: "ゲーム総合", genreId: "6014" },
-  entertainment: { id: "entertainment", name: "Entertainment", nameJa: "エンタメ", genreId: "6016" },
-  social: { id: "social", name: "Social Networking", nameJa: "SNS", genreId: "6005" },
-  business: { id: "business", name: "Business", nameJa: "ビジネス", genreId: "6000" },
-  education: { id: "education", name: "Education", nameJa: "教育", genreId: "6017" },
-  utilities: { id: "utilities", name: "Utilities", nameJa: "ユーティリティ", genreId: "6002" },
-  productivity: { id: "productivity", name: "Productivity", nameJa: "仕事効率化", genreId: "6007" },
-  photo: { id: "photo", name: "Photo & Video", nameJa: "写真/ビデオ", genreId: "6008" },
-  lifestyle: { id: "lifestyle", name: "Lifestyle", nameJa: "ライフスタイル", genreId: "6012" },
-  finance: { id: "finance", name: "Finance", nameJa: "ファイナンス", genreId: "6015" },
-  health: { id: "health", name: "Health & Fitness", nameJa: "ヘルスケア", genreId: "6013" },
-  music: { id: "music", name: "Music", nameJa: "ミュージック", genreId: "6011" },
-  shopping: { id: "shopping", name: "Shopping", nameJa: "ショッピング", genreId: "6024" },
-  travel: { id: "travel", name: "Travel", nameJa: "旅行", genreId: "6003" },
-  news: { id: "news", name: "News", nameJa: "ニュース", genreId: "6009" },
-  sports: { id: "sports", name: "Sports", nameJa: "スポーツ", genreId: "6004" },
-  food: { id: "food", name: "Food & Drink", nameJa: "フード/ドリンク", genreId: "6023" },
+  all: { id: "all", name: "All Categories", nameJa: "総合", apiPath: "apps" },
+  games: { id: "games", name: "Games", nameJa: "ゲーム", apiPath: "games" },
 } as const;
 
 export type CategoryType = keyof typeof CATEGORY_TYPES;
 export const CATEGORY_TYPE_IDS = Object.keys(CATEGORY_TYPES) as CategoryType[];
 
-// App Store category mappings
+// App Store category mappings (for reference, not used in RSS API filtering)
 export const APP_CATEGORIES: Record<string, { name: string; nameJa: string; isGame: boolean }> = {
   "6018": { name: "Books", nameJa: "ブック", isGame: false },
   "6000": { name: "Business", nameJa: "ビジネス", isGame: false },
