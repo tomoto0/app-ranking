@@ -52,3 +52,8 @@
 - [x] Create category dropdown selector UI
 - [x] Create search bar UI component
 - [x] Display cross-country ranking for searched apps
+
+## SEO Improvements (v1.3)
+- [x] Add meta description (50-160 characters)
+- [x] Add meta keywords
+- [x] Add Open Graph (OG) tags for social media sharing
