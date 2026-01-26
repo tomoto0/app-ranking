@@ -197,7 +197,7 @@ export const appRouter = router({
                 appId,
                 country,
                 rankingType: rankingType as "topgrossing" | "topfree" | "toppaid",
-                categoryType: categoryType as "all" | "games",
+                categoryType: categoryType as "all",
                 rank: fetchedApp.rank,
                 rankDate: new Date(today),
               });
@@ -217,7 +217,7 @@ export const appRouter = router({
       
       for (const country of COUNTRY_CODES) {
         for (const rankingType of RANKING_TYPE_IDS) {
-          for (const categoryType of ["all", "games"] as const) {
+          for (const categoryType of ["all"] as const) {
             const today = new Date().toISOString().split('T')[0];
             
             try {
@@ -474,7 +474,7 @@ ${JSON.stringify(rankingData, null, 2)}
               eq(rankings.appId, appId),
               inArray(rankings.country, countries),
               eq(rankings.rankingType, rankingType as "topgrossing" | "topfree" | "toppaid"),
-              eq(rankings.categoryType, categoryType as "all" | "games"),
+              eq(rankings.categoryType, categoryType as "all"),
               eq(rankings.rankDate, new Date(date))
             )
           );

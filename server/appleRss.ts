@@ -93,14 +93,8 @@ export async function fetchAppleRssFeed(
     feedType = "top-free";
   }
 
-  // Build the URL based on category type
-  let url: string;
-  if (categoryType === "games") {
-    // For games, we need to use a different endpoint
-    url = `https://rss.marketingtools.apple.com/api/v2/${countryInfo.appleCode}/apps/${feedType}/${limit}/games.json`;
-  } else {
-    url = `https://rss.marketingtools.apple.com/api/v2/${countryInfo.appleCode}/apps/${feedType}/${limit}/apps.json`;
-  }
+  // Build the URL - Apple RSS API only supports "all apps" (no games filter)
+  const url = `https://rss.marketingtools.apple.com/api/v2/${countryInfo.appleCode}/apps/${feedType}/${limit}/apps.json`;
 
   try {
     const response = await axios.get<AppleRssResponse>(url, {

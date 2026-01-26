@@ -79,3 +79,8 @@
 - [x] Implement fetchAll endpoint to fetch all countries, ranking types, and categories
 - [x] Store historical ranking data in database for accumulation
 - [x] Ensure users can view latest data immediately when opening URL
+
+## Category Dropdown Fix (v1.8)
+- [x] Fix category dropdown to only show "総合" (Apple RSS API does not support games filter)
+- [x] Update backend to remove games category support
+- [x] Update tests to reflect category changes

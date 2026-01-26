@@ -46,7 +46,7 @@ describe("rankings router", () => {
       const result = await caller.rankings.list({
         countries: ["JP", "US", "GB"],
         rankingType: "topfree",
-        categoryType: "games",
+        categoryType: "all",
         date: "2024-01-01",
         page: 1,
         pageSize: 50,
@@ -116,7 +116,7 @@ describe("apps router", () => {
           appId: 1,
           country: "US",
           rankingType: "topfree",
-          categoryType: "games",
+          categoryType: "all",
           period,
         });
 
@@ -188,7 +188,7 @@ describe("constants router", () => {
     expect(result).toHaveProperty("toppaid");
   });
 
-  it("should return category types (only all and games)", async () => {
+  it("should return category types (only all)", async () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 
@@ -196,10 +196,9 @@ describe("constants router", () => {
 
     // Check that only supported categories are returned
     expect(result).toHaveProperty("all");
-    expect(result).toHaveProperty("games");
     
-    // Verify only 2 categories exist (Apple RSS API limitation)
-    expect(Object.keys(result).length).toBe(2);
+    // Verify only 1 category exists (Apple RSS API limitation)
+    expect(Object.keys(result).length).toBe(1);
   });
 
   it("should return app categories", async () => {

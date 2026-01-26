@@ -20,12 +20,11 @@ export const RANKING_TYPES = {
 export type RankingType = keyof typeof RANKING_TYPES;
 export const RANKING_TYPE_IDS = Object.keys(RANKING_TYPES) as RankingType[];
 
-// Category types - Only categories supported by Apple RSS Feed API
-// Apple RSS API only supports: /apps.json (all) and /games.json (games)
-// Individual categories are NOT supported by the RSS API
+// Category types - Apple RSS Feed API only supports "All Apps"
+// Note: After investigation, Apple RSS Feed API does NOT support Games category filtering
+// The Type dropdown only shows "Apps" when Media Type is "Apps"
 export const CATEGORY_TYPES = {
   all: { id: "all", name: "All Categories", nameJa: "総合", apiPath: "apps" },
-  games: { id: "games", name: "Games", nameJa: "ゲーム", apiPath: "games" },
 } as const;
 
 export type CategoryType = keyof typeof CATEGORY_TYPES;

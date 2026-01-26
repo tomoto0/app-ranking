@@ -34,10 +34,9 @@ const RANKING_TYPES = {
 type RankingType = keyof typeof RANKING_TYPES;
 
 // Category types - Only categories supported by Apple RSS Feed API
-// Apple RSS API only supports: /apps.json (all) and /games.json (games)
+// After investigation, Apple RSS API only supports "All Apps" (no games filter)
 const CATEGORY_TYPES = {
   all: { id: "all", name: "All Categories", nameJa: "総合" },
-  games: { id: "games", name: "Games", nameJa: "ゲーム" },
 } as const;
 
 type CategoryType = keyof typeof CATEGORY_TYPES;
