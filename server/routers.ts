@@ -370,22 +370,26 @@ export const appRouter = router({
         const rankingTypeName = RANKING_TYPES[rankingType as RankingType].name;
         const categoryTypeName = CATEGORY_TYPES[categoryType as CategoryType].name;
 
-        const prompt = `Analyze the following App Store ${rankingTypeName} rankings for ${countryNames} (${categoryTypeName} category) on ${date}.
+        const countryNamesJa = countries.map(c => COUNTRIES[c as CountryCode].nameJa).join("・");
+        const rankingTypeNameJa = RANKING_TYPES[rankingType as RankingType].nameJa;
+        const categoryTypeNameJa = CATEGORY_TYPES[categoryType as CategoryType].nameJa;
 
-Ranking Data:
+        const prompt = `以下は${date}時点の${countryNamesJa}におけるApp Store「${rankingTypeNameJa}」ランキング（${categoryTypeNameJa}カテゴリ）のデータです。
+
+ランキングデータ:
 ${JSON.stringify(rankingData, null, 2)}
 
-Please provide:
-1. A summary of the top trending apps and their characteristics
-2. Notable patterns or trends you observe
-3. Any interesting insights about the market preferences in these countries
+以下の観点で分析してください（日本語で回答）:
+1. 上位にランクインしているアプリの特徴と傾向
+2. 注目すべきパターンやトレンド
+3. 各国の市場の好みに関する興味深い洞察
 
-Keep the analysis concise but insightful, around 200-300 words.`;
+200〜300文字程度で、簡潔かつ洞察に富んだ分析をお願いします。`;
 
         try {
           const response = await invokeLLM({
             messages: [
-              { role: "system", content: "You are an expert app market analyst specializing in App Store trends across different countries. Provide insightful, data-driven analysis." },
+              { role: "system", content: "あなたは各国のApp Storeトレンドを専門とするアプリ市場アナリストです。データに基づいた洞察力のある分析を日本語で提供してください。" },
               { role: "user", content: prompt },
             ],
           });

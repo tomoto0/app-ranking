@@ -38,3 +38,8 @@
 - [x] Test multi-country comparison workflow
 - [x] Verify responsive design
 - [x] Final UI polish
+
+## Fixes (v1.1)
+- [x] Change AI trend analysis prompt to output in Japanese
+- [x] Remove ranking history chart from app detail modal
+- [x] Remove ranking stats (highest/average/lowest rank) from app detail modal

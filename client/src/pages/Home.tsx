@@ -255,8 +255,6 @@ export default function Home() {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         country={selectedCountries[0]}
-        rankingType={selectedRankingType}
-        categoryType={selectedCategoryType}
       />
     </div>
   );
