@@ -1,30 +1,22 @@
 import axios from "axios";
-import { COUNTRIES, CountryCode, RankingType, CategoryType } from "../shared/rankings";
+import { COUNTRIES, CountryCode, RankingType, CategoryType, CATEGORY_TYPES, RANKING_TYPES } from "../shared/rankings";
 
-// Apple RSS Feed API response types
-interface AppleRssApp {
-  id: string;
-  name: string;
-  url: string;
-  artistName: string;
-  artistId: string;
-  artistUrl: string;
-  artworkUrl100: string;
-  genres: Array<{ genreId: string; name: string; url: string }>;
-  releaseDate: string;
+// iTunes RSS Feed API response types (old format with genre support)
+interface ItunesRssEntry {
+  "im:name": { label: string };
+  "im:image": Array<{ label: string; attributes: { height: string } }>;
+  "im:artist": { label: string; attributes?: { href: string } };
+  "im:price"?: { label: string; attributes: { amount: string; currency: string } };
+  "im:releaseDate"?: { label: string; attributes: { label: string } };
+  "id": { label: string; attributes: { "im:id": string; "im:bundleId"?: string } };
+  "category": { attributes: { "im:id": string; term: string; label: string } };
+  "summary"?: { label: string };
 }
 
-interface AppleRssResponse {
+interface ItunesRssResponse {
   feed: {
-    title: string;
-    id: string;
-    author: { name: string; url: string };
-    links: Array<{ self: string }>;
-    copyright: string;
-    country: string;
-    icon: string;
-    updated: string;
-    results: AppleRssApp[];
+    title: { label: string };
+    entry: ItunesRssEntry[];
   };
 }
 
@@ -71,9 +63,8 @@ export interface FetchedApp {
 }
 
 /**
- * Fetch top apps from Apple RSS Feed
- * Note: Apple RSS only supports top-free and top-paid, not top-grossing
- * For top-grossing, we'll use the same data as top-free as a fallback
+ * Fetch top apps from iTunes RSS Feed (old format with genre/category support)
+ * URL format: https://itunes.apple.com/{country}/rss/{feedType}/limit={limit}/genre={genreId}/json
  */
 export async function fetchAppleRssFeed(
   country: CountryCode,
@@ -82,22 +73,23 @@ export async function fetchAppleRssFeed(
   limit: number = 50
 ): Promise<FetchedApp[]> {
   const countryInfo = COUNTRIES[country];
+  const rankingInfo = RANKING_TYPES[rankingType];
+  const categoryInfo = CATEGORY_TYPES[categoryType];
   
-  // Map ranking type to Apple RSS feed type
-  // Note: Apple RSS doesn't have top-grossing, we use top-free as fallback
-  let feedType: string;
-  if (rankingType === "toppaid") {
-    feedType = "top-paid";
-  } else {
-    // Both topfree and topgrossing use top-free feed
-    feedType = "top-free";
+  // Build the iTunes RSS URL with genre support
+  let url = `https://itunes.apple.com/${countryInfo.appleCode}/rss/${rankingInfo.feedType}/limit=${limit}`;
+  
+  // Add genre parameter if not "all"
+  if (categoryInfo.genreId) {
+    url += `/genre=${categoryInfo.genreId}`;
   }
+  
+  url += "/json";
 
-  // Build the URL - Apple RSS API only supports "all apps" (no games filter)
-  const url = `https://rss.marketingtools.apple.com/api/v2/${countryInfo.appleCode}/apps/${feedType}/${limit}/apps.json`;
+  console.log(`Fetching iTunes RSS: ${url}`);
 
   try {
-    const response = await axios.get<AppleRssResponse>(url, {
+    const response = await axios.get<ItunesRssResponse>(url, {
       timeout: 30000,
       headers: {
         "Accept": "application/json",
@@ -105,22 +97,45 @@ export async function fetchAppleRssFeed(
       },
     });
 
-    const apps = response.data.feed.results;
+    const entries = response.data.feed?.entry || [];
     
-    return apps.map((app, index) => ({
-      appStoreId: app.id,
-      name: app.name,
-      artistName: app.artistName,
-      artworkUrl100: app.artworkUrl100,
-      categoryId: app.genres?.[0]?.genreId,
-      categoryName: app.genres?.[0]?.name,
-      price: 0, // RSS doesn't include price
-      currency: "USD",
-      releaseDate: app.releaseDate,
-      rank: index + 1,
-    }));
+    if (entries.length === 0) {
+      console.warn(`No entries found for ${country} ${rankingType} ${categoryType}`);
+      return [];
+    }
+
+    return entries.map((entry, index) => {
+      // Get the largest image (usually the last one)
+      const images = entry["im:image"] || [];
+      const artworkUrl100 = images.length > 0 ? images[images.length - 1]?.label : "";
+      
+      // Parse price
+      const priceAttr = entry["im:price"]?.attributes;
+      const price = priceAttr ? parseFloat(priceAttr.amount) || 0 : 0;
+      const currency = priceAttr?.currency || "USD";
+      
+      // Parse release date
+      const releaseDate = entry["im:releaseDate"]?.attributes?.label || 
+                          entry["im:releaseDate"]?.label || 
+                          new Date().toISOString();
+
+      return {
+        appStoreId: entry.id.attributes["im:id"],
+        bundleId: entry.id.attributes["im:bundleId"],
+        name: entry["im:name"].label,
+        artistName: entry["im:artist"].label,
+        artworkUrl100,
+        summary: entry.summary?.label,
+        categoryId: entry.category.attributes["im:id"],
+        categoryName: entry.category.attributes.label,
+        price,
+        currency,
+        releaseDate,
+        rank: index + 1,
+      };
+    });
   } catch (error) {
-    console.error(`Failed to fetch Apple RSS feed for ${country} ${rankingType}:`, error);
+    console.error(`Failed to fetch iTunes RSS feed for ${country} ${rankingType} ${categoryType}:`, error);
     return [];
   }
 }

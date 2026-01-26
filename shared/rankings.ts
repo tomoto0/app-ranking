@@ -10,27 +10,48 @@ export const COUNTRIES = {
 export type CountryCode = keyof typeof COUNTRIES;
 export const COUNTRY_CODES = Object.keys(COUNTRIES) as CountryCode[];
 
-// Ranking types
+// Ranking types with iTunes RSS feed type names
 export const RANKING_TYPES = {
-  topgrossing: { id: "topgrossing", name: "Top Grossing", nameJa: "トップセールス" },
-  topfree: { id: "topfree", name: "Top Free", nameJa: "トップ無料DL" },
-  toppaid: { id: "toppaid", name: "Top Paid", nameJa: "トップ有料DL" },
+  topgrossing: { id: "topgrossing", name: "Top Grossing", nameJa: "トップセールス", feedType: "topgrossingapplications" },
+  topfree: { id: "topfree", name: "Top Free", nameJa: "トップ無料DL", feedType: "topfreeapplications" },
+  toppaid: { id: "toppaid", name: "Top Paid", nameJa: "トップ有料DL", feedType: "toppaidapplications" },
 } as const;
 
 export type RankingType = keyof typeof RANKING_TYPES;
 export const RANKING_TYPE_IDS = Object.keys(RANKING_TYPES) as RankingType[];
 
-// Category types - Apple RSS Feed API only supports "All Apps"
-// Note: After investigation, Apple RSS Feed API does NOT support Games category filtering
-// The Type dropdown only shows "Apps" when Media Type is "Apps"
+// Category types with genre IDs for iTunes RSS API
+// iTunes RSS API supports genre filtering via: https://itunes.apple.com/{country}/rss/{feedType}/limit={limit}/genre={genreId}/json
 export const CATEGORY_TYPES = {
-  all: { id: "all", name: "All Categories", nameJa: "総合", apiPath: "apps" },
+  all: { id: "all", name: "All Categories", nameJa: "総合", genreId: null },
+  games: { id: "games", name: "Games", nameJa: "ゲーム", genreId: "6014" },
+  entertainment: { id: "entertainment", name: "Entertainment", nameJa: "エンターテインメント", genreId: "6016" },
+  socialNetworking: { id: "socialNetworking", name: "Social Networking", nameJa: "ソーシャルネットワーキング", genreId: "6005" },
+  photoVideo: { id: "photoVideo", name: "Photo & Video", nameJa: "写真/ビデオ", genreId: "6008" },
+  music: { id: "music", name: "Music", nameJa: "ミュージック", genreId: "6011" },
+  lifestyle: { id: "lifestyle", name: "Lifestyle", nameJa: "ライフスタイル", genreId: "6012" },
+  shopping: { id: "shopping", name: "Shopping", nameJa: "ショッピング", genreId: "6024" },
+  healthFitness: { id: "healthFitness", name: "Health & Fitness", nameJa: "ヘルスケア/フィットネス", genreId: "6013" },
+  finance: { id: "finance", name: "Finance", nameJa: "ファイナンス", genreId: "6015" },
+  productivity: { id: "productivity", name: "Productivity", nameJa: "仕事効率化", genreId: "6007" },
+  utilities: { id: "utilities", name: "Utilities", nameJa: "ユーティリティ", genreId: "6002" },
+  education: { id: "education", name: "Education", nameJa: "教育", genreId: "6017" },
+  business: { id: "business", name: "Business", nameJa: "ビジネス", genreId: "6000" },
+  news: { id: "news", name: "News", nameJa: "ニュース", genreId: "6009" },
+  travel: { id: "travel", name: "Travel", nameJa: "旅行", genreId: "6003" },
+  foodDrink: { id: "foodDrink", name: "Food & Drink", nameJa: "フード/ドリンク", genreId: "6023" },
+  sports: { id: "sports", name: "Sports", nameJa: "スポーツ", genreId: "6004" },
 } as const;
 
 export type CategoryType = keyof typeof CATEGORY_TYPES;
 export const CATEGORY_TYPE_IDS = Object.keys(CATEGORY_TYPES) as CategoryType[];
 
-// App Store category mappings (for reference, not used in RSS API filtering)
+// Helper function to get genre ID for a category
+export function getGenreId(categoryType: CategoryType): string | null {
+  return CATEGORY_TYPES[categoryType]?.genreId ?? null;
+}
+
+// App Store category mappings (for reference)
 export const APP_CATEGORIES: Record<string, { name: string; nameJa: string; isGame: boolean }> = {
   "6018": { name: "Books", nameJa: "ブック", isGame: false },
   "6000": { name: "Business", nameJa: "ビジネス", isGame: false },

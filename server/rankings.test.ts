@@ -188,17 +188,20 @@ describe("constants router", () => {
     expect(result).toHaveProperty("toppaid");
   });
 
-  it("should return category types (only all)", async () => {
+  it("should return category types (all supported categories)", async () => {
     const ctx = createTestContext();
     const caller = appRouter.createCaller(ctx);
 
     const result = await caller.constants.categoryTypes();
 
-    // Check that only supported categories are returned
+    // Check that all supported categories are returned
     expect(result).toHaveProperty("all");
+    expect(result).toHaveProperty("games");
+    expect(result).toHaveProperty("entertainment");
+    expect(result).toHaveProperty("socialNetworking");
     
-    // Verify only 1 category exists (Apple RSS API limitation)
-    expect(Object.keys(result).length).toBe(1);
+    // Verify 18 categories exist (iTunes RSS API supports genre filtering)
+    expect(Object.keys(result).length).toBe(18);
   });
 
   it("should return app categories", async () => {

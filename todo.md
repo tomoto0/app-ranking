@@ -84,3 +84,12 @@
 - [x] Fix category dropdown to only show "総合" (Apple RSS API does not support games filter)
 - [x] Update backend to remove games category support
 - [x] Update tests to reflect category changes
+
+## Full Category Support (v1.9)
+- [x] Investigate all categories supported by Apple RSS Feed API (Found iTunes RSS API with genre support!)
+- [x] Update shared/rankings.ts with all supported categories
+- [x] Update drizzle schema to support all categories
+- [x] Update server/appleRss.ts to use iTunes RSS API with genre parameter
+- [x] Update routers.ts to handle category parameter
+- [x] Update FilterBar component with full category dropdown
+- [x] Test data fetching for each category and country

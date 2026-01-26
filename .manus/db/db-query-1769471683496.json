@@ -1,0 +1,15 @@
+{
+  "query": "SELECT rankDate, DATE(rankDate) as date_only, COUNT(*) as count FROM rankings WHERE categoryType = 'games' GROUP BY rankDate, DATE(rankDate)",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user uNghJRV6HrXdbvr.a480de6421cc --database fZNpr7d375kYydmKcXuCxS --execute SELECT rankDate, DATE(rankDate) as date_only, COUNT(*) as count FROM rankings WHERE categoryType = 'games' GROUP BY rankDate, DATE(rankDate)",
+  "rows": [
+    {
+      "rankDate": "2026-01-25",
+      "date_only": "2026-01-25",
+      "count": "100"
+    }
+  ],
+  "messages": [],
+  "stdout": "rankDate\tdate_only\tcount\n2026-01-25\t2026-01-25\t100\n",
+  "stderr": "",
+  "execution_time_ms": 359
+}

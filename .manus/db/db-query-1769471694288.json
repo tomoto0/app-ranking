@@ -1,0 +1,50 @@
+{
+  "query": "SELECT r.id, r.rankDate, r.categoryType, r.country, r.rank, a.name FROM rankings r JOIN apps a ON r.appId = a.id WHERE r.categoryType = 'games' ORDER BY r.rank LIMIT 5",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user uNghJRV6HrXdbvr.a480de6421cc --database fZNpr7d375kYydmKcXuCxS --execute SELECT r.id, r.rankDate, r.categoryType, r.country, r.rank, a.name FROM rankings r JOIN apps a ON r.appId = a.id WHERE r.categoryType = 'games' ORDER BY r.rank LIMIT 5",
+  "rows": [
+    {
+      "id": "2985",
+      "rankDate": "2026-01-25",
+      "categoryType": "games",
+      "country": "JP",
+      "rank": "1",
+      "name": "パズル＆ドラゴンズ"
+    },
+    {
+      "id": "2986",
+      "rankDate": "2026-01-25",
+      "categoryType": "games",
+      "country": "JP",
+      "rank": "2",
+      "name": "eFootball™"
+    },
+    {
+      "id": "2987",
+      "rankDate": "2026-01-25",
+      "categoryType": "games",
+      "country": "JP",
+      "rank": "3",
+      "name": "ラストウォー：サバイバル"
+    },
+    {
+      "id": "2988",
+      "rankDate": "2026-01-25",
+      "categoryType": "games",
+      "country": "JP",
+      "rank": "4",
+      "name": "ホワイトアウト・サバイバル"
+    },
+    {
+      "id": "2989",
+      "rankDate": "2026-01-25",
+      "categoryType": "games",
+      "country": "JP",
+      "rank": "5",
+      "name": "アークナイツ：エンドフィールド"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\trankDate\tcategoryType\tcountry\trank\tname\n2985\t2026-01-25\tgames\tJP\t1\tパズル＆ドラゴンズ\n2986\t2026-01-25\tgames\tJP\t2\teFootball™\n2987\t2026-01-25\tgames\tJP\t3\tラストウォー：サバイバル\n2988\t2026-01-25\tgames\tJP\t4\tホワイトアウト・サバイバル\n2989\t2026-01-25\tgames\tJP\t5\tアークナイツ：エンドフィールド\n",
+  "stderr": "",
+  "execution_time_ms": 361
+}

@@ -1,0 +1,106 @@
+{
+  "query": "SELECT country, rankingType, categoryType, COUNT(*) as count FROM rankings GROUP BY country, rankingType, categoryType;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user uNghJRV6HrXdbvr.a480de6421cc --database fZNpr7d375kYydmKcXuCxS --execute SELECT country, rankingType, categoryType, COUNT(*) as count FROM rankings GROUP BY country, rankingType, categoryType;",
+  "rows": [
+    {
+      "country": "KR",
+      "rankingType": "toppaid",
+      "categoryType": "all",
+      "count": "100"
+    },
+    {
+      "country": "CN",
+      "rankingType": "toppaid",
+      "categoryType": "all",
+      "count": "99"
+    },
+    {
+      "country": "GB",
+      "rankingType": "toppaid",
+      "categoryType": "all",
+      "count": "96"
+    },
+    {
+      "country": "GB",
+      "rankingType": "topfree",
+      "categoryType": "all",
+      "count": "100"
+    },
+    {
+      "country": "CN",
+      "rankingType": "topfree",
+      "categoryType": "all",
+      "count": "100"
+    },
+    {
+      "country": "KR",
+      "rankingType": "topfree",
+      "categoryType": "all",
+      "count": "100"
+    },
+    {
+      "country": "JP",
+      "rankingType": "topgrossing",
+      "categoryType": "all",
+      "count": "100"
+    },
+    {
+      "country": "JP",
+      "rankingType": "topgrossing",
+      "categoryType": "games",
+      "count": "100"
+    },
+    {
+      "country": "JP",
+      "rankingType": "topfree",
+      "categoryType": "all",
+      "count": "100"
+    },
+    {
+      "country": "GB",
+      "rankingType": "topgrossing",
+      "categoryType": "all",
+      "count": "100"
+    },
+    {
+      "country": "KR",
+      "rankingType": "topgrossing",
+      "categoryType": "all",
+      "count": "100"
+    },
+    {
+      "country": "CN",
+      "rankingType": "topgrossing",
+      "categoryType": "all",
+      "count": "100"
+    },
+    {
+      "country": "US",
+      "rankingType": "topgrossing",
+      "categoryType": "all",
+      "count": "100"
+    },
+    {
+      "country": "US",
+      "rankingType": "toppaid",
+      "categoryType": "all",
+      "count": "98"
+    },
+    {
+      "country": "JP",
+      "rankingType": "toppaid",
+      "categoryType": "all",
+      "count": "97"
+    },
+    {
+      "country": "US",
+      "rankingType": "topfree",
+      "categoryType": "all",
+      "count": "100"
+    }
+  ],
+  "messages": [],
+  "stdout": "country\trankingType\tcategoryType\tcount\nKR\ttoppaid\tall\t100\nCN\ttoppaid\tall\t99\nGB\ttoppaid\tall\t96\nGB\ttopfree\tall\t100\nCN\ttopfree\tall\t100\nKR\ttopfree\tall\t100\nJP\ttopgrossing\tall\t100\nJP\ttopgrossing\tgames\t100\nJP\ttopfree\tall\t100\nGB\ttopgrossing\tall\t100\nKR\ttopgrossing\tall\t100\nCN\ttopgrossing\tall\t100\nUS\ttopgrossing\tall\t100\nUS\ttoppaid\tall\t98\nJP\ttoppaid\tall\t97\nUS\ttopfree\tall\t100\n",
+  "stderr": "",
+  "execution_time_ms": 373
+}

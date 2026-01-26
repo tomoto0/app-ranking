@@ -191,7 +191,7 @@ export async function getRankings(params: {
   const { countries, rankingType, categoryType, date, limit, offset } = params;
 
   try {
-    // Get rankings with app data
+    // Get rankings with app data - use DATE() function for proper date comparison
     const results = await db
       .select({
         ranking: rankings,
@@ -204,7 +204,7 @@ export async function getRankings(params: {
           inArray(rankings.country, countries),
           eq(rankings.rankingType, rankingType),
           eq(rankings.categoryType, categoryType),
-          eq(rankings.rankDate, new Date(date))
+          sql`DATE(${rankings.rankDate}) = ${date}`
         )
       )
       .orderBy(rankings.rank)
@@ -220,7 +220,7 @@ export async function getRankings(params: {
           inArray(rankings.country, countries),
           eq(rankings.rankingType, rankingType),
           eq(rankings.categoryType, categoryType),
-          eq(rankings.rankDate, new Date(date))
+          sql`DATE(${rankings.rankDate}) = ${date}`
         )
       );
 

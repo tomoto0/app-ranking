@@ -197,7 +197,7 @@ export const appRouter = router({
                 appId,
                 country,
                 rankingType: rankingType as "topgrossing" | "topfree" | "toppaid",
-                categoryType: categoryType as "all",
+                categoryType: categoryType as CategoryType,
                 rank: fetchedApp.rank,
                 rankDate: new Date(today),
               });

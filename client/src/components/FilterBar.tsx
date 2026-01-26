@@ -33,10 +33,27 @@ const RANKING_TYPES = {
 
 type RankingType = keyof typeof RANKING_TYPES;
 
-// Category types - Only categories supported by Apple RSS Feed API
-// After investigation, Apple RSS API only supports "All Apps" (no games filter)
+// Category types with genre IDs for iTunes RSS API
+// iTunes RSS API supports genre filtering via: https://itunes.apple.com/{country}/rss/{feedType}/limit={limit}/genre={genreId}/json
 const CATEGORY_TYPES = {
-  all: { id: "all", name: "All Categories", nameJa: "総合" },
+  all: { id: "all", name: "All Categories", nameJa: "総合", genreId: null },
+  games: { id: "games", name: "Games", nameJa: "ゲーム", genreId: "6014" },
+  entertainment: { id: "entertainment", name: "Entertainment", nameJa: "エンターテインメント", genreId: "6016" },
+  socialNetworking: { id: "socialNetworking", name: "Social Networking", nameJa: "ソーシャルネットワーキング", genreId: "6005" },
+  photoVideo: { id: "photoVideo", name: "Photo & Video", nameJa: "写真/ビデオ", genreId: "6008" },
+  music: { id: "music", name: "Music", nameJa: "ミュージック", genreId: "6011" },
+  lifestyle: { id: "lifestyle", name: "Lifestyle", nameJa: "ライフスタイル", genreId: "6012" },
+  shopping: { id: "shopping", name: "Shopping", nameJa: "ショッピング", genreId: "6024" },
+  healthFitness: { id: "healthFitness", name: "Health & Fitness", nameJa: "ヘルスケア/フィットネス", genreId: "6013" },
+  finance: { id: "finance", name: "Finance", nameJa: "ファイナンス", genreId: "6015" },
+  productivity: { id: "productivity", name: "Productivity", nameJa: "仕事効率化", genreId: "6007" },
+  utilities: { id: "utilities", name: "Utilities", nameJa: "ユーティリティ", genreId: "6002" },
+  education: { id: "education", name: "Education", nameJa: "教育", genreId: "6017" },
+  business: { id: "business", name: "Business", nameJa: "ビジネス", genreId: "6000" },
+  news: { id: "news", name: "News", nameJa: "ニュース", genreId: "6009" },
+  travel: { id: "travel", name: "Travel", nameJa: "旅行", genreId: "6003" },
+  foodDrink: { id: "foodDrink", name: "Food & Drink", nameJa: "フード/ドリンク", genreId: "6023" },
+  sports: { id: "sports", name: "Sports", nameJa: "スポーツ", genreId: "6004" },
 } as const;
 
 type CategoryType = keyof typeof CATEGORY_TYPES;
@@ -171,19 +188,19 @@ export function FilterBar({
           ))}
         </div>
 
-        {/* Category Selection - Simple dropdown with only supported categories */}
+        {/* Category Selection - Full dropdown with all supported categories */}
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">カテゴリ:</span>
           <Select
             value={selectedCategoryType}
             onValueChange={(value) => onCategoryTypeChange(value as CategoryType)}
           >
-            <SelectTrigger className="w-[120px]">
+            <SelectTrigger className="w-[180px]">
               <SelectValue>
                 {CATEGORY_TYPES[selectedCategoryType]?.nameJa || "総合"}
               </SelectValue>
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="max-h-[300px]">
               {Object.entries(CATEGORY_TYPES).map(([key, cat]) => (
                 <SelectItem key={key} value={key}>
                   {cat.nameJa}
