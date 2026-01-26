@@ -73,3 +73,9 @@
 ## Category UI Fix (v1.6)
 - [x] Fix FilterBar category dropdown to only show supported categories (all, games)
 - [x] Remove hardcoded individual category options from UI
+
+## Automated Data Fetching (v1.7)
+- [x] Set up scheduled task for daily ranking data fetch at JST 7:00 (UTC 22:00)
+- [x] Implement fetchAll endpoint to fetch all countries, ranking types, and categories
+- [x] Store historical ranking data in database for accumulation
+- [x] Ensure users can view latest data immediately when opening URL
