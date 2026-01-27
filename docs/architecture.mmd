@@ -1,0 +1,58 @@
+graph TB
+    subgraph "クライアント (React + TypeScript)"
+        UI[ユーザーインターフェース]
+        FC[FilterBar / RankingTable]
+        TrendAI[AIトレンド分析]
+        Search[アプリ検索]
+    end
+
+    subgraph "tRPC API Layer"
+        TRPC[tRPC Router]
+        AUTH[認証 Router]
+        RANK[Rankings Router]
+        APPS[Apps Router]
+        CONST[Constants Router]
+        ANALYSIS[Analysis Router]
+    end
+
+    subgraph "サービス層"
+        RSS[Apple RSS Service]
+        LLM[LLM Service]
+        DB_SVC[Database Service]
+    end
+
+    subgraph "外部API"
+        ITUNES[iTunes RSS Feed API]
+        LOOKUP[iTunes Lookup API]
+        AI_API[OpenAI API]
+    end
+
+    subgraph "データベース (MySQL/TiDB)"
+        APPS_TBL[(apps テーブル)]
+        RANK_TBL[(rankings テーブル)]
+    end
+
+    UI --> FC
+    UI --> TrendAI
+    UI --> Search
+    FC --> TRPC
+    TrendAI --> TRPC
+    Search --> TRPC
+
+    TRPC --> AUTH
+    TRPC --> RANK
+    TRPC --> APPS
+    TRPC --> CONST
+    TRPC --> ANALYSIS
+
+    RANK --> RSS
+    RANK --> DB_SVC
+    APPS --> DB_SVC
+    ANALYSIS --> LLM
+    ANALYSIS --> DB_SVC
+
+    RSS --> ITUNES
+    RSS --> LOOKUP
+    LLM --> AI_API
+    DB_SVC --> APPS_TBL
+    DB_SVC --> RANK_TBL

@@ -93,3 +93,11 @@
 - [x] Update routers.ts to handle category parameter
 - [x] Update FilterBar component with full category dropdown
 - [x] Test data fetching for each category and country
+
+## Documentation (v2.0)
+- [x] Create README.md with app overview
+- [x] Add OGP image to README
+- [x] Document features and functionality
+- [x] Document technical specifications and API
+- [x] Create architecture diagram
+- [x] Add architecture diagram to README
