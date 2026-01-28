@@ -101,3 +101,10 @@
 - [x] Document technical specifications and API
 - [x] Create architecture diagram
 - [x] Add architecture diagram to README
+
+## Server-side Cron Job (v2.1)
+- [x] Install node-cron package
+- [x] Create cron job service for scheduled data fetching
+- [x] Configure cron to run at JST 7:00 (UTC 22:00) daily
+- [x] Add retry logic for network errors
+- [x] Test cron job execution
